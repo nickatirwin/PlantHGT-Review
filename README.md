@@ -4,7 +4,7 @@ Associated files and methodological details for the analysis presented in:
 #### Fridrich, A. &amp; Irwin, N. A. T. 2025. Cross-kingdom gene transfer as a driver of land plant evolution.
 
 ## Methods
-We aimed approximate the proportion of the plant genes which trace their ancestry to prokaryotic sources since the streptophyte ancestor. To do this, we blasted each gene from a series of representative plant genomes against the NCBI non-redundant database, excluded streptophtye hits, and classified the origin of the gene based on the majority rule taxonomy of the top 25 hits.
+We aimed to approximate the proportion of plant genes which trace their ancestry to prokaryotic sources since the last common streptophyte ancestor. To do this, we blasted each protein from a series of representative plant genomes against the NCBI non-redundant database, excluded streptophtye hits, and classified the origin of the gene based on the majority rule taxonomy of the top 25 hits. Only a single protein was taken per gene from each species.
 
 #### 0. Requirements
 Install dependencies with conda:
