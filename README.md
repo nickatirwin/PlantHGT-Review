@@ -131,8 +131,8 @@ for seq in seq_d:
 out.close()
 
 # Marchantia
-fasta = open('1480154.MpTak1_v7.1.protein.fa','r').read().split('>')[1:]
-out = open('1480154.MpTak1_v7.1.protein.rename.fa','w')
+fasta = open('MpTak1_v7.1.protein.fa','r').read().split('>')[1:]
+out = open('MpTak1_v7.1.protein.rename.fa','w')
 # record all sequences - take the longest protein per gene
 seq_d = {}
 for seq in fasta:
