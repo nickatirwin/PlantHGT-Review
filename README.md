@@ -6,6 +6,13 @@ Associated files and methodological details for the analysis presented in:
 ## Methods
 We aimed approximate the proportion of the plant genes which trace their ancestry to prokaryotic sources since the streptophyte ancestor. To do this, we blasted each gene from a series of representative plant genomes against the NCBI non-redundant database, excluded streptophtye hits, and classified the origin of the gene based on the majority rule taxonomy of the top 25 hits.
 
+#### 0. Requirements
+Install dependencies with conda:
+```
+conda install bioconda::diamond
+conda install conda-forge::ete3
+```
+
 #### 1. Collect genome-predicted proteomes for representative plant taxa and take only the longest protein prediction per gene
 Download genomes:
 | Genome  | Source | Link |
@@ -168,6 +175,7 @@ out.close()
 ```
 #### 2. Search for non-streptophyte homologs for each plant protein
 BLAST all proteomes against NCBI NR, excluding streptophtyes streptophyte (NCBI TaxaID: 33090) hits, to identify closest homologs outside of streptophytes. Use DIAMOND BLASTP (sensitive mode, E < 1E-5, percent ID > 25, max target sequences = 250, query coverage > 50%). Synthetic constructs were also excluded from the blast results (NCBI TaxaID: 2787854).
+Note: adjust NCBI nr database path
 ```
 # search each proteome against NCBI nr using Diamond BLASTP
 for i in *rename.fa; do diamond blastp --query $i --db /data/NCBI_nr/nr/nr.dmnd -o $i.nr.sensitive.blastp --threads 32 --taxon-exclude 33090,2787854 --max-target-seqs 250 --id 25 --query-cover 50 --evalue 1e-5 --sensitive --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore staxids; done
