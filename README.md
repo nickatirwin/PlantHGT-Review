@@ -330,4 +330,4 @@ matplotlib.rcParams['font.family'] = 'Arial'
 plt.savefig("PlantHGT.bar.pdf", format="pdf")
 plt.close()
 ```
-![alt text](https://github.com/nickatirwin/PlantHGT-Review/images/PlantHGT.bar.png)
+<img src="https://github.com/nickatirwin/PlantHGT-Review/blob/main/PlantHGT.bar.png" alt="PlantHGTbar" width="500" height="450">
