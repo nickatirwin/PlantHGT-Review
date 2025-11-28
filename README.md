@@ -181,6 +181,7 @@ Note: adjust NCBI nr database path
 for i in *rename.fa; do diamond blastp --query $i --db /data/NCBI_nr/nr/nr.dmnd -o $i.nr.sensitive.blastp --threads 32 --taxon-exclude 35493,2787854 --max-target-seqs 500 --id 25 --query-cover 50 --evalue 1e-5 --sensitive --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore staxids; done
 # cut out the resulting hits
 for i in *rename.fa; do cut -f 2 $i.nr.sensitive.blastp > $i.nr.sensitive.blastp.hits; done```
+```
 #### 3. Classify the taxonomic origin of each protein based on its BLAST hits
 ```
 from ete3 import NCBITaxa
@@ -272,4 +273,54 @@ for i in *taxonomy; do awk '$2 == "Prokaryota" && $3 >= 50 && $4 == 100' $i > $i
 wc -l *blastp.taxonomy.filt > Prokaryotic.genes.txt
 awk '{print $2, $1}' Prokaryotic.genes.txt
 ```
+Identify prokaryote derived genes from Supplemental Data from Dong et al. 2025 (https://doi.org/10.1038/s41588-025-02325-9)
+```
+# read in HGTs
+f = open('Dong2025_TableS10.tab','r').readlines()
+
+# read in orthogroups
+og = open('HGT_56sp-orthogroups_Fig3a.txt','r').readlines()
+og_to_seq = {}
+for i in og:
+    og_to_seq[i.split(':')[0]] = []
+    for seq in i.split(':',1)[1].split(' '):
+        if seq.strip() != '':
+            og_to_seq[i.split(':')[0]].append(seq.strip())
+
+seq_to_og = {}
+for og in og_to_seq:
+    for seq in og_to_seq[og]:
+        seq_to_og[seq] = og
+
+# define acceptable nodes to land plants - exclude viridiplantae and chlorophytes
+nodes = ['Species-specific','Angiosperms','Bryophytes','Chara_MRCA','Gymnosperms','Hornworts','Knitens_MRCA','Land_Plants','Liverworts','Lycophytes','Mosses','Seed_Plants','Setaphytes','Streptophytes','Tracheophytes','Zygnematales_MRCA']
+
+HGT_count = {'At':[],'Sm':[],'Gm':[],'Mp':[],'Af':[],'Pp':[],'Aa':[],'Os':[]}
+
+for hgt in f:
+    if (hgt.split('\t')[2] == 'Bacteria') or (hgt.split('\t')[2] == 'Archaea'):
+        og = hgt.split('\t')[1].strip()
+        if (og != 'NA') and (hgt.split('\t')[7] in nodes):
+            for s in og_to_seq[og]:
+                if 'Athaliana' in s:
+                    HGT_count['At'].append(s)
+                elif 'Smoellendorffii' in s:
+                    HGT_count['Sm'].append(s)
+                elif 'Gmontanum' in s:
+                    HGT_count['Gm'].append(s)
+                elif 'Aangustus' in s:
+                    HGT_count['Aa'].append(s)
+                elif 'Mpolymorpha' in s:
+                    HGT_count['Mp'].append(s)
+                elif 'Afiliculoides' in s:
+                    HGT_count['Af'].append(s)
+                elif 'Ppatens' in s:
+                    HGT_count['Pp'].append(s)
+                elif 'Osativa' in s:
+                    HGT_count['Os'].append(s)
+
+for i in HGT_count:
+    print(i+':'+str(len(set(HGT_count[i]))))
+```
+
 <img src="https://github.com/nickatirwin/PlantHGT-Review/blob/main/PlantHGT.bar.png" alt="PlantHGTbar" width="500" height="450">
